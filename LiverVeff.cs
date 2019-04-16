@@ -69,7 +69,8 @@ namespace VMS.TPS
             DVHData dvhData = planSetup.GetDVHCumulativeData(Liver,
                                           DoseValuePresentation.Absolute,
                                           VolumePresentation.Relative, 1);  //can decrease resolution to .1 if desired
-
+            if (dvhData == null)
+                throw new ApplicationException("DVH data does not exist. Script execution cancelled.");
 
             //Reformat DVH data into array
             int nbins = dvhData.CurveData.Length - 1;
@@ -89,11 +90,10 @@ namespace VMS.TPS
                 Diffdvhvolumepercent[i] = dvhvolumepercent[i] - dvhvolumepercent[i + 1];  //Reference Clinical Radiotherapy Physics with MATLAB: A Problem-Solving Approach By Pavel Dvorak
             }
 
-            if (dvhData == null)
-                throw new ApplicationException("DVH data does not exist. Script execution cancelled.");
+            
 
             /*
-            // Add existing WPF control to the script window.
+            // Add existing WPF control to the script window.  Uncomment to Plot Cumulative and Differential DVH
             var mainControl = new LiverVeff.MainControl();
             window.Content = mainControl;
             window.Width = 610;
@@ -121,7 +121,7 @@ namespace VMS.TPS
 
 
 
-            /*
+            /*  this doesn't work... ignore until developed further
 
             //Iterative Prescription dose reduction
             if (Veffpercent > 25)
